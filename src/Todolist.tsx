@@ -2,6 +2,11 @@ import React, {ChangeEvent} from 'react';
 import {FilterValuesType} from './App';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
+import Button from "@mui/material/Button";
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Checkbox from "@mui/material/Checkbox";
+import Paper from "@mui/material/Paper";
 
 export type TaskType = {
     id: string
@@ -22,7 +27,6 @@ type PropsType = {
     filter: FilterValuesType
     changeTaskTitle: (taskId: string, newTitle: string, todolistId: string) => void
 }
-
 export function Todolist(props: PropsType) {
     const addTask = (title: string) => {
         props.addTask(title, props.id);
@@ -39,9 +43,14 @@ export function Todolist(props: PropsType) {
     const onActiveClickHandler = () => props.changeFilter("active", props.id);
     const onCompletedClickHandler = () => props.changeFilter("completed", props.id);
 
-    return <div>
-        <h3> <EditableSpan value={props.title} onChange={changeTodolistTitle} />
-            <button onClick={removeTodolist}>x</button>
+    const todosStyle = {
+        padding: '50px 10px',
+        borderRadius: '10px',
+    }
+
+    return <Paper elevation={24} style={todosStyle}>
+        <h3><EditableSpan value={props.title} onChange={changeTodolistTitle}/>
+            <IconButton aria-label="delete" onClick={removeTodolist}> <DeleteIcon/></IconButton>
         </h3>
         <AddItemForm addItem={addTask}/>
         <ul>
@@ -58,25 +67,25 @@ export function Todolist(props: PropsType) {
 
 
                     return <li key={t.id} className={t.isDone ? "is-done" : ""}>
-                        <input type="checkbox" onChange={onChangeHandler} checked={t.isDone}/>
-                        <EditableSpan value={t.title} onChange={onTitleChangeHandler} />
-                        <button onClick={onClickHandler}>x</button>
+                        <Checkbox color={"success"} onChange={onChangeHandler} checked={t.isDone}/>
+                        <EditableSpan value={t.title} onChange={onTitleChangeHandler}/>
+                        <IconButton size={'small'} onClick={onClickHandler}> <DeleteIcon/></IconButton>
                     </li>
                 })
             }
         </ul>
         <div>
-            <button className={props.filter === 'all' ? "active-filter" : ""}
+            <Button size={'small'} color="success" variant={props.filter === 'all' ? "contained" : "outlined"}
                     onClick={onAllClickHandler}>All
-            </button>
-            <button className={props.filter === 'active' ? "active-filter" : ""}
+            </Button>
+            <Button size={'small'} color="primary" variant={props.filter === 'active' ? "contained" : "outlined"}
                     onClick={onActiveClickHandler}>Active
-            </button>
-            <button className={props.filter === 'completed' ? "active-filter" : ""}
+            </Button>
+            <Button size={'small'} color="secondary" variant={props.filter === 'completed' ? "contained" : "outlined"}
                     onClick={onCompletedClickHandler}>Completed
-            </button>
+            </Button>
         </div>
-    </div>
+    </Paper>
 }
 
 
